@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f7ff">
+  <title>Snaplink — Link Shortener</title>
+  <style>
+    :root { color-scheme: light; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #18233b; background: #f4f7ff; font-synthesis: none; }
+    * { box-sizing: border-box; }
+    body { min-height: 100vh; margin: 0; padding: 28px 20px 56px; background: radial-gradient(ellipse at 50% -10%, #e2eaff 0, transparent 48%), #f7f8fc; }
+    main { width: min(100%, 760px); margin: auto; }
+    .topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 58px; }
+    .brand { display: flex; align-items: center; gap: 10px; color: #18233b; font-weight: 750; letter-spacing: -.03em; }
+    .brand-mark { display: grid; width: 34px; height: 34px; place-items: center; border-radius: 11px; color: white; background: #455ee9; box-shadow: 0 5px 12px #455ee944; }
+    .top-note { color: #78839a; font-size: .82rem; }
+    .hero { max-width: 610px; margin: 0 auto 30px; text-align: center; }
+    .eyebrow { color: #455ee9; font-size: .73rem; font-weight: 750; letter-spacing: .12em; text-transform: uppercase; }
+    h1 { margin: 12px 0 10px; font-size: clamp(2.15rem, 7vw, 3.25rem); line-height: 1.05; letter-spacing: -.065em; }
+    .hero p { max-width: 470px; margin: 0 auto; color: #737f97; font-size: 1.02rem; line-height: 1.65; }
+    .card { padding: 28px; border: 1px solid #e8ebf3; border-radius: 18px; background: #fff; box-shadow: 0 16px 44px #26365a0b, 0 2px 8px #26365a08; }
+    .card + .card { margin-top: 18px; }
+    .card-heading { display: flex; align-items: flex-start; gap: 13px; margin-bottom: 20px; }
+    .icon { display: grid; flex: 0 0 40px; width: 40px; height: 40px; place-items: center; border-radius: 12px; color: #455ee9; background: #eef1ff; font-size: 1.1rem; }
+    h2 { margin: 0 0 4px; font-size: 1.05rem; letter-spacing: -.02em; }
+    .card-heading p { margin: 0; color: #8993a7; font-size: .87rem; }
+    label { display: block; margin: 17px 0 7px; color: #3b465b; font-size: .84rem; font-weight: 650; }
+    input { width: 100%; min-height: 46px; padding: 11px 13px; border: 1px solid #dfe3ed; border-radius: 9px; outline: none; color: #18233b; background: #fff; font: inherit; font-size: .92rem; transition: border-color .15s, box-shadow .15s; }
+    input::placeholder { color: #a5adbc; }
+    input:focus { border-color: #7889f0; box-shadow: 0 0 0 3px #455ee91a; }
+    .optional-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .optional-fields label { margin-top: 15px; }
+    button { min-height: 45px; border: 0; border-radius: 9px; padding: 0 18px; color: white; background: #455ee9; font: inherit; font-size: .91rem; font-weight: 700; cursor: pointer; box-shadow: 0 5px 12px #455ee929; transition: background .15s, transform .15s; }
+    button:hover { background: #354ed3; transform: translateY(-1px); }
+    button:focus-visible { outline: 3px solid #aab5ff; outline-offset: 2px; }
+    .primary-button { display: flex; width: 100%; align-items: center; justify-content: center; gap: 8px; margin-top: 21px; }
+    .secondary { min-height: 38px; padding: 0 13px; background: #eef1ff; color: #3e53c7; box-shadow: none; }
+    .secondary:hover { background: #e1e6ff; }
+    .row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 18px; padding: 12px; border: 1px solid #e6eaff; border-radius: 11px; background: #f8f9ff; }
+    .result { flex: 1; min-width: 140px; overflow-wrap: anywhere; color: #354ed3; font-weight: 650; text-decoration: none; }
+    .result:hover { text-decoration: underline; }
+    #stats-form { align-items: stretch; }
+    #stats-code { flex: 1; min-width: 160px; }
+    #stats-form button { align-self: stretch; }
+    pre { overflow-x: auto; margin: 14px 0 0; padding: 15px; border: 1px solid #edf0f6; border-radius: 10px; color: #46536b; background: #fafbfe; font: .82rem/1.65 ui-monospace, SFMono-Regular, Menlo, monospace; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .message { min-height: 1.35em; margin-top: 11px; color: #b42318; font-size: .86rem; }
+    .footer { margin-top: 25px; color: #9aa3b4; font-size: .78rem; text-align: center; }
+    @media (max-width: 560px) { body { padding: 20px 14px 36px; } .topbar { margin-bottom: 42px; } .top-note { font-size: .72rem; } .card { padding: 21px 18px; } .optional-fields { grid-template-columns: 1fr; gap: 0; } #stats-form { flex-direction: column; } #stats-form button { width: 100%; } }
+  </style>
+</head>
+<body>
+<main>
+  <div class="topbar"><div class="brand"><span class="brand-mark">↗</span> snaplink</div><span class="top-note">Simple links. Clear insights.</span></div>
+  <header class="hero"><div class="eyebrow">Your links, made simple</div><h1>Short links.<br>More impact.</h1><p>Turn long URLs into clean, shareable links and see how people use them.</p></header>
+  <section class="card">
+    <div class="card-heading"><span class="icon">↗</span><div><h2>Create a short link</h2><p>Paste a URL to get started.</p></div></div>
+    <form id="shorten-form">
+      <label for="longUrl">Long URL</label><input id="longUrl" type="url" placeholder="https://example.com/page" required maxlength="2048">
+      <div class="optional-fields"><div><label for="customAlias">Custom alias <span class="top-note">(optional)</span></label><input id="customAlias" placeholder="my-link" minlength="3" maxlength="20" pattern="[A-Za-z0-9-]+"></div>
+      <div><label for="expiryDays">Expires in days <span class="top-note">(optional)</span></label><input id="expiryDays" type="number" min="1" placeholder="No expiry"></div></div>
+      <button class="primary-button" type="submit">Shorten URL <span aria-hidden="true">→</span></button>
+    </form>
+    <div id="short-result" class="row" hidden><a id="short-link" class="result"></a><button class="secondary" id="copy-button" type="button">Copy</button></div>
+    <div id="short-message" class="message" role="status"></div>
+  </section>
+  <section class="card">
+    <div class="card-heading"><span class="icon">▥</span><div><h2>Link analytics</h2><p>Check clicks, referrers, and device types.</p></div></div>
+    <form id="stats-form" class="row"><input id="stats-code" aria-label="Short code" placeholder="Enter a short code" required><button type="submit">View stats</button></form>
+    <pre id="stats-result"></pre><div id="stats-message" class="message" role="status"></div>
+  </section>
+  <div class="footer">Fast, simple link sharing — all in one place.</div>
+</main>
+<script>
+  const form = document.querySelector('#shorten-form');
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const message = document.querySelector('#short-message');
+    message.textContent = '';
+    const expiry = document.querySelector('#expiryDays').value;
+    const body = { longUrl: document.querySelector('#longUrl').value };
+    const alias = document.querySelector('#customAlias').value.trim();
+    if (alias) body.customAlias = alias;
+    if (expiry) body.expiryDays = Number(expiry);
+    try {
+      const response = await fetch('/api/shorten', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Could not shorten URL');
+      const link = document.querySelector('#short-link');
+      link.href = data.shortUrl; link.textContent = data.shortUrl;
+      document.querySelector('#short-result').hidden = false;
+    } catch (error) { message.textContent = error.message; }
+  });
+  document.querySelector('#copy-button').addEventListener('click', async () => {
+    await navigator.clipboard.writeText(document.querySelector('#short-link').href);
+    document.querySelector('#short-message').textContent = 'Link copied.';
+  });
+  document.querySelector('#stats-form').addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const code = document.querySelector('#stats-code').value.trim();
+    const message = document.querySelector('#stats-message'); message.textContent = '';
+    try {
+      const response = await fetch('/api/stats/' + encodeURIComponent(code));
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Could not load stats');
+      document.querySelector('#stats-result').textContent = JSON.stringify(data, null, 2);
+    } catch (error) { message.textContent = error.message; }
+  });
+</script>
+</body>
+</html>
