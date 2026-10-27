@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
-import java.net.URI;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -20,6 +19,7 @@ import java.util.regex.Pattern;
 @Service
 public class UrlService {
     private static final Pattern ALIAS_PATTERN = Pattern.compile("[A-Za-z0-9-]{3,20}");
+    private static final Set<String> RESERVED_ALIASES = Set.of("api", "health", "static", "index", "error");
     private final UrlRepository urls;
     private final ClickRepository clicks;
     private final Base62Encoder encoder;
@@ -47,6 +47,7 @@ public class UrlService {
         if (expiryDays != null && expiryDays < 1) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "expiryDays must be positive");
         if (customAlias != null && !customAlias.isBlank()) {
             if (!ALIAS_PATTERN.matcher(customAlias).matches()) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "customAlias must be 3-20 letters, numbers, or hyphens");
+            if (RESERVED_ALIASES.contains(customAlias.toLowerCase(Locale.ROOT))) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "That alias is reserved");
             if (urls.existsByShortCode(customAlias)) throw new ResponseStatusException(HttpStatus.CONFLICT, "That alias is already in use");
         }
         Instant expiresAt = expiryDays == null ? null : Instant.now().plus(expiryDays, ChronoUnit.DAYS);

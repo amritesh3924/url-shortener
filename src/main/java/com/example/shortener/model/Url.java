@@ -10,7 +10,9 @@ public class Url {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "short_code", length = 20, unique = true)
+    // Base62 uses uppercase and lowercase letters as distinct code characters.
+    @Column(name = "short_code", length = 20, unique = true,
+            columnDefinition = "VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin")
     private String shortCode;
 
     @Column(name = "long_url", length = 2048, nullable = false)

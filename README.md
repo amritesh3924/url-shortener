@@ -75,6 +75,8 @@ Set these environment variables for hosted services. The defaults below are for 
 
 For Render, set `PORT` if needed; Spring Boot reads it automatically. Point `DB_URL`, `DB_USER`, and `DB_PASS` at MySQL (for example Aiven). Point Redis variables at the Redis endpoint and set `REDIS_SSL=true` for Upstash TLS.
 
+For Aiven MySQL, append `&sslMode=REQUIRED` to `DB_URL` and use the Aiven host and port.
+
 ## Run locally
 
 Use PowerShell from the project root. Docker Compose starts MySQL and Redis; run the app with Maven in a second terminal.
@@ -93,6 +95,8 @@ mvn spring-boot:run
 ```
 
 Open [http://localhost:8080](http://localhost:8080). Stop the app with Ctrl+C, then stop local services with `docker compose down` (add `-v` only if you also want to remove the MySQL data volume).
+
+If the `urls` table was created earlier, run `docker compose down -v` then `docker compose up -d` so the `short_code` column is recreated with its case-sensitive collation. This removes the local MySQL volume and its data.
 
 ## Build order and run commands
 

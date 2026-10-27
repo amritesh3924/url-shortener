@@ -13,8 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import java.net.URI;
-import java.util.Map;
 
 @RestController
 @Validated
@@ -29,7 +27,12 @@ public class UrlController {
 
     @PostMapping("/api/shorten")
     public UrlService.ShortenResult shorten(@Valid @RequestBody ShortenRequest body, HttpServletRequest request) {
-        if (!rateLimiter.allow(request.getRemoteAddr())) {
+        // Use the original client address because Render forwards requests through a proxy.
+        String forwarded = request.getHeader("X-Forwarded-For");
+        String ip = (forwarded == null || forwarded.isBlank())
+                ? request.getRemoteAddr()
+                : forwarded.split(",")[0].trim();
+        if (!rateLimiter.allow(ip)) {
             throw new org.springframework.web.server.ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Rate limit exceeded; try again next minute");
         }
         return urlService.shorten(body.longUrl(), body.customAlias(), body.expiryDays());
