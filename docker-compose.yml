@@ -4,14 +4,14 @@ services:
     environment:
       MYSQL_DATABASE: url_shortener
       MYSQL_USER: shortener
-      MYSQL_PASSWORD: shortener
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_PASSWORD: ${DB_PASS:?set DB_PASS in .env}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?set MYSQL_ROOT_PASSWORD in .env}
     ports:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot"]
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -p$$MYSQL_ROOT_PASSWORD"]
       interval: 5s
       timeout: 3s
       retries: 20

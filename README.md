@@ -65,7 +65,7 @@ Set these environment variables for hosted services. The defaults below are for 
 | --- | --- | --- |
 | `DB_URL` | `jdbc:mysql://localhost:3306/url_shortener?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC` | JDBC URL |
 | `DB_USER` | `shortener` | MySQL username |
-| `DB_PASS` | `shortener` | MySQL password |
+| `DB_PASS` | *(required)* | MySQL password |
 | `REDIS_HOST` | `localhost` | Redis host |
 | `REDIS_PORT` | `6379` | Redis port |
 | `REDIS_PASSWORD` | empty | Redis password |
@@ -82,6 +82,8 @@ For Aiven MySQL, append `&sslMode=REQUIRED` to `DB_URL` and use the Aiven host a
 Use PowerShell from the project root. Docker Compose starts MySQL and Redis; run the app with Maven in a second terminal.
 
 ```powershell
+Copy-Item .env.example .env
+# Set DB_PASS and MYSQL_ROOT_PASSWORD in .env before starting Docker Compose.
 docker compose up -d
 $env:DB_URL = "jdbc:mysql://localhost:3306/url_shortener?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC"
 $env:DB_USER = "shortener"
@@ -161,7 +163,7 @@ The k6 setup creates 100 links and waits between batches to respect the API's 20
 
 ## Load test results
 
-Run the same test once with `CACHE_ENABLED=false` and again with `CACHE_ENABLED=true`. Restart the app between runs so each run uses the selected setting. Fill in the measurements from your own environment.
+Run the same test once with `CACHE_ENABLED=false` and again with `CACHE_ENABLED=true`. Restart the app between runs so each run uses the selected setting.
 
 | Cache | Redirects/sec | p95 latency (ms) |
 | --- | ---: | ---: |
