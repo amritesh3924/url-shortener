@@ -85,10 +85,10 @@ Use PowerShell from the project root. Docker Compose starts MySQL and Redis; run
 docker compose up -d
 $env:DB_URL = "jdbc:mysql://localhost:3306/url_shortener?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC"
 $env:DB_USER = "shortener"
-$env:DB_PASS = "shortener"
+$env:DB_PASS = "<your-database-password>"
 $env:REDIS_HOST = "localhost"
 $env:REDIS_PORT = "6379"
-$env:REDIS_PASSWORD = ""
+$env:REDIS_PASSWORD = "<your-redis-password>"
 $env:BASE_URL = "http://localhost:8080"
 $env:CACHE_ENABLED = "true"
 mvn spring-boot:run
@@ -163,11 +163,17 @@ The k6 setup creates 100 links and waits between batches to respect the API's 20
 
 Run the same test once with `CACHE_ENABLED=false` and again with `CACHE_ENABLED=true`. Restart the app between runs so each run uses the selected setting. Fill in the measurements from your own environment.
 
-| Cache | Requests/sec | p95 latency (ms) |
+| Cache | Redirects/sec | p95 latency (ms) |
 | --- | ---: | ---: |
-| OFF |  |  |
-| ON |  |  |
+| OFF | 186.07 | 396.14 |
+| ON | 215.83 | 312.26 |
+
+Cache hit rate (ON): **98.42%** (6,373 hits, 102 misses).
+
+Test environment: Windows, local machine, MySQL 8.4 and Redis 7 in Docker, 50 virtual users, 30 seconds, 100 short links.
+
+Notes: Every redirect still performs two MySQL writes (click count update and click row), so Redis only removes the read; batching click writes is the next optimization.
 
 ## Live demo
 
-Live demo: **[Add deployed URL here]**
+Live demo: https://url-shortener-1ism.onrender.com
